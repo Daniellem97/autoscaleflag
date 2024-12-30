@@ -9,5 +9,5 @@ curl -k -L -o lambda.zip "https://github.com/spacelift-io/ec2-workerpool-autosca
 ls -lh lambda.zip
 mkdir -p lambda
 cd lambda
-unzip -o ../lambda.zip
+unzip -o -t ../lambda.zip
 rm ../lambda.zip
