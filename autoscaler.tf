@@ -24,7 +24,7 @@ resource "null_resource" "download" {
       sha256sum lambda.zip
       mkdir -p lambda || { echo "Failed to create directory"; exit 1; }
       cd lambda
-      unzip -K -o ../lambda.zip || { echo "Unzip failed"; exit 1; }
+      unzip -K -t -o ../lambda.zip || { echo "Unzip failed"; exit 1; }
     EOT
   }
 }
