@@ -12,20 +12,13 @@ resource "aws_ssm_parameter" "spacelift_api_key_secret" {
 }
 
 resource "null_resource" "download" {
+  count = var.enable_autoscaling && !local.use_s3_package ? 1 : 0
   triggers = {
+    # Always re-download the archive file
     now = timestamp()
   }
   provisioner "local-exec" {
-    interpreter = ["bash", "-c"]
-    quiet = true
-    command = <<-EOT
-      set -ex
-      curl -k -s -L --retry 3 --retry-delay 5 -o lambda.zip "https://github.com/spacelift-io/ec2-workerpool-autoscaler/releases/download/v1.0.1/ec2-workerpool-autoscaler_linux_arm64.zip"
-      sha256sum lambda.zip
-      mkdir -p lambda || { echo "Failed to create directory"; exit 1; }
-      cd lambda
-      unzip -K -t -o ../lambda.zip || { echo "Unzip failed"; exit 1; }
-    EOT
+    command = "${path.module}/download.sh ${var.autoscaler_version} ${var.autoscaler_architecture}"
   }
 }
 
