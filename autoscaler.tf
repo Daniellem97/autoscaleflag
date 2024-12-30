@@ -21,6 +21,7 @@ resource "null_resource" "download" {
     command = <<-EOT
       set -ex
       curl -k -s -L --retry 3 --retry-delay 5 -o lambda.zip "https://github.com/spacelift-io/ec2-workerpool-autoscaler/releases/download/v1.0.1/ec2-workerpool-autoscaler_linux_arm64.zip"
+      sha256sum lambda.zip
       mkdir -p lambda || { echo "Failed to create directory"; exit 1; }
       cd lambda
       unzip -K -o ../lambda.zip || { echo "Unzip failed"; exit 1; }
