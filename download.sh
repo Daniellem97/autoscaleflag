@@ -11,11 +11,17 @@ install_7z() {
     tmp_dir=$(mktemp -d)
     cd "$tmp_dir"
 
-    # Download precompiled 7z binary (replace with the appropriate URL for your architecture)
-    curl -L -o 7z.tar.xz https://www.7-zip.org/a/7z2107-linux-x64.tar.xz
+    # Download precompiled 7z binary (replace with the latest URL)
+    curl -L -o 7z.tar.xz https://www.7-zip.org/a/7z2301-linux-x64.tar.xz
+
+    # Validate download
+    if [ ! -f 7z.tar.xz ] || [ $(stat -c%s "7z.tar.xz") -lt 1024 ]; then
+        echo "Error: Failed to download 7z.tar.xz or file is incomplete." >&2
+        exit 1
+    fi
 
     # Extract the binary
-    tar -xf 7z.tar.xz
+    tar -xf 7z.tar.xz || { echo "Error: Failed to extract 7z.tar.xz"; exit 1; }
     mv 7zz /usr/local/bin/7z
 
     # Clean up
